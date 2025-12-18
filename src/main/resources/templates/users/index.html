@@ -1,0 +1,21 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <title>[[#{home.index.headline}]]</title>
+
+
+</head>
+<body>
+    <div layout:fragment="content">
+      <h1>Les utilisateurs</h1>
+        <div x-data="users">
+            <p>Users will print there</p>
+        </div>
+    </div>
+
+    <th:block layout:fragment="scripts">
+        <script th:src="${asset['users.js']}"></script>
+    </th:block>
+</body>
+</html>

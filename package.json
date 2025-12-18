@@ -1,0 +1,29 @@
+{
+  "name": "ehelper-frontend",
+  "author": "dialltay",
+  "scripts": {
+    "start": "webpack serve --open --mode development",
+    "build": "webpack --mode production"
+  },
+  "dependencies": {
+    "@tailwindcss/postcss": "^4.1.18",
+    "postcss": "^8.5.6",
+    "tailwindcss": "^4.1.18"
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.4.23",
+    "css-loader": "7.1.2",
+    "esbuild-loader": "^4.4.0",
+    "mini-css-extract-plugin": "2.9.4",
+    "postcss-loader": "^8.2.0",
+    "style-loader": "4.0.0",
+    "tsconfig-paths-webpack-plugin": "4.2.0",
+    "typescript": "5.9.3",
+    "warnings-to-errors-webpack-plugin": "2.3.0",
+    "webpack": "5.103.0",
+    "webpack-cli": "6.0.1",
+    "webpack-dev-server": "5.2.2",
+    "webpack-manifest-plugin": "^6.0.1"
+  },
+  "private": true
+}
