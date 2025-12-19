@@ -34,7 +34,7 @@ public class AssetConfig {
         ObjectMapper mapper = new ObjectMapper();
         try (InputStream is = resource.getInputStream()) {
             return mapper.readValue(is, new TypeReference<>() {});
-        } catch (IOException e) {
+        } catch (Exception e) {
             LOGGER.warn("⚠️  {} not found or invalid !", AssetConfig.MANIFEST_PATH, e);
             return AssetConfig.DEFAULT_MANIFEST;
 
