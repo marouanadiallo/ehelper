@@ -13,7 +13,8 @@ module.exports = (env, argv) => ({
   },
   output: {
     path: path.resolve(__dirname, './target/classes/static'),
-    filename: 'js/[name].[contenthash].bundle.js',
+    filename: argv.mode === 'production' ? 'js/[name].[contenthash].bundle.js' : 'js/[name].bundle.js',
+    publicPath: '/',
     clean: true
   },
   devtool: argv.mode === 'production' ? false : 'eval-source-map',
@@ -22,7 +23,7 @@ module.exports = (env, argv) => ({
     maxAssetSize: 488000
   },
   optimization: {
-   minimize: true,
+   minimize: argv.mode === 'production',
    minimizer: [
      new EsbuildPlugin({
        target: 'es2015',
@@ -33,7 +34,7 @@ module.exports = (env, argv) => ({
   },
   plugins: [
      new MiniCssExtractPlugin({
-          filename: "[name].[contenthash].css",
+          filename: argv.mode === 'production' ? "[name].[contenthash].css" : "[name].bundle.css",
      }),
      new WebpackManifestPlugin({
          fileName: '../manifest.json',
@@ -56,7 +57,7 @@ module.exports = (env, argv) => ({
       {
         test: /\.css$/,
         use: [
-          argv.mode === 'production' ? MiniCssExtractPlugin.loader : 'style-loader',
+          MiniCssExtractPlugin.loader,
           {
             loader: 'css-loader',
             options: {

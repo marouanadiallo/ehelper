@@ -1,21 +1,116 @@
-<!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{layout}">
-<head>
+<!DOCTYPE html>
+<html
+  xmlns:th="http://www.thymeleaf.org"
+  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+  layout:decorate="~{layout}"
+>
+  <head>
     <title>[[#{home.index.headline}]]</title>
+  </head>
 
-
-</head>
-<body>
+  <body>
     <div layout:fragment="content">
-      <h1>Les utilisateurs</h1>
-        <div x-data="users">
-            <p>Users will print there</p>
+      <div class="flex justify-between items-center mx-2">
+        <h1 class="text-2xl font-semibold mb-2">Les utilisateurs</h1>
+        <div class="flex items-center gap-3">
+          <span class="flex items-center gap-2">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              class="size-6"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5m-13.5-9L12 3m0 0 4.5 4.5M12 3v13.5"
+              />
+            </svg>
+
+            <input type="file" placeholder="Importer" />
+          </span>
+          <button class="flex items-center gap-2">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              class="size-6"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M12 4.5v15m7.5-7.5h-15"
+              />
+            </svg>
+
+            <span>Ajouter</span>
+          </button>
         </div>
+      </div>
+      <div x-data="users">
+        <div
+          class="border border-granite-200 rounded-lg shadow-sm overflow-hidden"
+        >
+          <div class="overflow-x-auto">
+            <table class="w-full">
+              <thead class="bg-granite-100 border-b border-granite-200">
+                <tr>
+                  <th
+                    class="px-6 py-4 text-left text-sm font-semibold text-granite-700"
+                  >
+                    Prénom et nom
+                  </th>
+                  <th
+                    class="px-6 py-4 text-left text-sm font-semibold text-granite-700"
+                  >
+                    Adresse email
+                  </th>
+                  <th
+                    class="px-6 py-4 text-left text-sm font-semibold text-granite-700"
+                  >
+                    Téléphone
+                  </th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-granite-200 bg-white">
+                <tr class="hover:bg-granite-50 transition-colors">
+                  <td class="px-6 py-4 text-sm text-granite-900">
+                    The Sliding Mr. Bones (Next Stop, Pottersville)
+                  </td>
+                  <td class="px-6 py-4 text-sm text-granite-700">
+                    Malcolm Lockyer
+                  </td>
+                  <td class="px-6 py-4 text-sm text-granite-700">1961</td>
+                </tr>
+                <tr class="hover:bg-granite-50 transition-colors">
+                  <td class="px-6 py-4 text-sm text-granite-900">
+                    Witchy Woman
+                  </td>
+                  <td class="px-6 py-4 text-sm text-granite-700">The Eagles</td>
+                  <td class="px-6 py-4 text-sm text-granite-700">1972</td>
+                </tr>
+                <tr class="hover:bg-granite-50 transition-colors">
+                  <td class="px-6 py-4 text-sm text-granite-900">
+                    Shining Star
+                  </td>
+                  <td class="px-6 py-4 text-sm text-granite-700">
+                    Earth, Wind, and Fire
+                  </td>
+                  <td class="px-6 py-4 text-sm text-granite-700">1975</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
     </div>
 
     <th:block layout:fragment="scripts">
-        <script th:src="${asset['users.js']}"></script>
+      <script th:src="${asset.get('users.js')}"></script>
     </th:block>
-</body>
+  </body>
 </html>

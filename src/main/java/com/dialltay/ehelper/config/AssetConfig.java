@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Component;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
@@ -16,6 +17,12 @@ public class AssetConfig {
 
     private final Map<String, String> manifest;
     private final static String MANIFEST_PATH = "manifest.json";
+    private final static Map<String, String> DEFAULT_MANIFEST = Map.of(
+            "main.css", "/main.bundle.css",
+            "main.js", "/js/main.bundle.js",
+            "users.js", "/js/users.bundle.js"
+    );
+
     private final static Logger LOGGER = LoggerFactory.getLogger(AssetConfig.class);
 
     public AssetConfig() {
@@ -23,17 +30,15 @@ public class AssetConfig {
     }
 
     private Map<String, String> loadManifest() {
-        try {
-            ClassPathResource resource = new ClassPathResource(MANIFEST_PATH);
-            ObjectMapper mapper = new ObjectMapper();
-            try (InputStream is = resource.getInputStream()) {
-                return mapper.readValue(is, new TypeReference<>() {});
-            }
+        ClassPathResource resource = new ClassPathResource(AssetConfig.MANIFEST_PATH);
+        ObjectMapper mapper = new ObjectMapper();
+        try (InputStream is = resource.getInputStream()) {
+            return mapper.readValue(is, new TypeReference<>() {});
         } catch (IOException e) {
-            LOGGER.error("⚠️  {} not found or invalid!", MANIFEST_PATH, e);
-            throw new RuntimeException("Failed to load asset manifest", e);
-        }
+            LOGGER.warn("⚠️  {} not found or invalid !", AssetConfig.MANIFEST_PATH, e);
+            return AssetConfig.DEFAULT_MANIFEST;
 
+        }
     }
 
     public String getAssetPath(String assetName) {
