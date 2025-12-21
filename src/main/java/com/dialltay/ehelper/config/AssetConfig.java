@@ -2,6 +2,7 @@ package com.dialltay.ehelper.config;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ClassPathResource;
@@ -12,6 +13,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
 
+@Getter
 @Component
 public class AssetConfig {
 
@@ -20,7 +22,8 @@ public class AssetConfig {
     private final static Map<String, String> DEFAULT_MANIFEST = Map.of(
             "main.css", "/main.bundle.css",
             "main.js", "/js/main.bundle.js",
-            "users.js", "/js/users.bundle.js"
+            "users.js", "/js/users.bundle.js",
+            "create-user", "/js/create-user.bundle.js"
     );
 
     private final static Logger LOGGER = LoggerFactory.getLogger(AssetConfig.class);
@@ -34,10 +37,13 @@ public class AssetConfig {
         ObjectMapper mapper = new ObjectMapper();
         try (InputStream is = resource.getInputStream()) {
             return mapper.readValue(is, new TypeReference<>() {});
-        } catch (Exception e) {
-            LOGGER.warn("⚠️  {} not found or invalid !", AssetConfig.MANIFEST_PATH, e);
+        } catch (FileNotFoundException e) {
+            LOGGER.warn("⚠️  {} not found ! Using default manifest.", AssetConfig.MANIFEST_PATH);
             return AssetConfig.DEFAULT_MANIFEST;
-
+        }
+        catch (Exception e) {
+            LOGGER.warn("⚠️  {} could not be loaded ! Using default manifest.", AssetConfig.MANIFEST_PATH);
+            return AssetConfig.DEFAULT_MANIFEST;
         }
     }
 
@@ -45,7 +51,4 @@ public class AssetConfig {
         return manifest.getOrDefault(assetName, "/"+assetName);
     }
 
-    public Map<String, String> getManifest() {
-        return manifest;
-    }
 }

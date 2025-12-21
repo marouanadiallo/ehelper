@@ -1,4 +1,7 @@
 databaseChangeLog:
   - include:
-      file: changes/001-create-task-table.sql
+      file: changes/001-create-user-table.sql
+      relativeToChangelogFile: true
+  - include:
+      file: changes/002-create-task-table.sql
       relativeToChangelogFile: true

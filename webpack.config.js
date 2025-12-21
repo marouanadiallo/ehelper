@@ -9,7 +9,8 @@ const WarningsToErrorsPlugin = require('warnings-to-errors-webpack-plugin');
 module.exports = (env, argv) => ({
   entry: {
     main: 'ts/main.ts',
-    users: 'ts/users.ts'
+    users: 'ts/users.ts',
+    'create-user': 'ts/create-user.ts'
   },
   output: {
     path: path.resolve(__dirname, './target/classes/static'),

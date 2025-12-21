@@ -1,7 +1,7 @@
-document.addEventListener('alpine:init', () => {
-    Alpine.data('users', () => ({
-        init() {
-            console.log('Users module initialized');
-        }
-    }));
+import {DataTable} from "simple-datatables";
+
+const dataTable = new DataTable("#user-table", {
+	searchable: false,
+	fixedHeight: true,
+    paging: false
 });
