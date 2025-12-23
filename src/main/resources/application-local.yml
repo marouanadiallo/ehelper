@@ -1,11 +1,33 @@
 spring:
-  h2:
-    console:
-      enabled: true
   datasource:
-    url: jdbc:h2:mem:ehelperDB;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
-    username: sa
-    password:
-    hikari:
-      connection-timeout: 30000
-      maximum-pool-size: 10
+    url: ${LOCAL_DB_URL:jdbc:postgresql://localhost:5432/ehelperDB}
+    username: ${LOCAL_DB_USERNAME:ehelperUser}
+    password: ${LOCAL_DB_PASSWORD:ehelperPass@789#}
+  jpa:
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        generate_statistics: true
+        session.events.log.LOG_QUERIES_SLOWER_THAN_MS: 20 # Log queries slower than 20 ms
+  logging:
+    level:
+      org.hibernate:
+        SQL: DEBUG
+        stat: DEBUG
+        SQL_SLOW: INFO
+        type.descriptor.sql: TRACE
+        orm.jdbc.bind: TRACE
+      com.zaxxer.hikari: DEBUG
+
+  mail:
+    host: localhost
+    port: 1025
+    username: ${MAIL_USERNAME:admin}
+    password: ${MAIL_PASSWORD:root}
+    properties:
+      mail:
+        smtp:
+          ssl:
+            trust: '*'
+          auth: true

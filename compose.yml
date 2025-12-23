@@ -1,0 +1,49 @@
+services:
+  postgres:
+    image: postgres:18-alpine
+    container_name: postgres_18
+    environment:
+      POSTGRES_USER: ehelperUser
+      POSTGRES_PASSWORD: ehelperPass@789#
+      POSTGRES_DB: ehelperDB
+    ports:
+      - "5432:5432"
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    networks:
+      - pg_network
+    restart: unless-stopped
+
+  pgadmin:
+    image: dpage/pgadmin4:9
+    container_name: pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@dev.com
+      PGADMIN_DEFAULT_PASSWORD: admin@123#
+      PGADMIN_CONFIG_SERVER_MODE: "False"
+    ports:
+      - "5050:80"
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+    networks:
+      - pg_network
+    restart: unless-stopped
+    depends_on:
+      - postgres
+
+  # service mailer
+  mail:
+    container_name: mailer
+    image: maildev/maildev:latest
+    ports:
+      - "1080:1080"
+      - "1025:1025"
+    restart: unless-stopped
+
+volumes:
+  pg_data:
+  pgadmin_data:
+
+networks:
+  pg_network:
+    driver: bridge

@@ -1,11 +1,21 @@
 spring:
   datasource:
-    url: ${JDBC_DATABASE_URL:jdbc:postgresql://localhost:5432/ehelperDB}
-    username: ${JDBC_DATABASE_USERNAME}
-    password: ${JDBC_DATABASE_PASSWORD}
     hikari:
-      connection-timeout: 30000
-      maximum-pool-size: 10
+      connection-timeout: 30000 # 30 seconds (avoid request timeouts)
+      idle-timeout: 600000 # 10 minutes (optimize resource usage)
+      minimum-idle: 10 # Maintain a minimum number of idle connections (avoid the cold start problem)
+      max-lifetime: 900000 # 15 minutes (prevent stale connections) and leak connections
+      maximum-pool-size: 40 # Adjust based on expected load and database capacity
+      transaction-isolation: TRANSACTION_READ_COMMITTED # Ensure data integrity during transactions
+      auto-commit: false # Disable auto-commit for better transaction management
+      leak-detection-threshold: 60000 # 60 seconds (detect potential connection leaks)
+      validation-timeout: 5000 # 5 seconds (ensure connections are valid)
+      data-source-properties:
+        cachePrepStmts: true # Enable prepared statement caching for performance
+        useServerPrepStmts: false # Use server-side prepared statements for efficiency (PostgreSQL specific)
+        prepStmtCacheSize: 250 # Number of prepared statements to cache
+        prepStmtCacheSqlLimit: 2048 # Maximum length of SQL statements to cache
+
   jpa:
     open-in-view: false # Disable Open Session in View to prevent lazy loading issues
     hibernate:
@@ -18,3 +28,27 @@ spring:
           provider_disables_autocommit: true # Disable auto-commit for better transaction management
         query:
           in_clause_parameter_padding: true # Enable padding for IN clause parameters to improve performance
+          fail_on_pagination_over_collection_fetch: true # Prevent inefficient pagination over collection fetches
+          plan_cache_max_size: 4096 # Increase plan cache size for better query performance
+          insert_order: true # Optimize insert order for batch inserts
+          batch_size: 50 # Set batch size for batch operations
+        jdbc:
+          batch_size: 50 # Set JDBC batch size for batch operations
+          time_zone: UTC # Ensure consistent timezone handling
+
+
+  logging:
+    level:
+      org.hibernate: ERROR # Set Hibernate logging level to ERROR for production
+      com.zaxxer.hikari: WARN # Set HikariCP logging level to WARN to reduce log noise
+
+  mail:
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+          connectiontimeout: 5000
+          timeout: 3000
+          writetimeout: 5000

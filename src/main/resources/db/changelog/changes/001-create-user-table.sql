@@ -19,10 +19,10 @@ CREATE TABLE IF NOT EXISTS t_app_user (
     enabled BOOLEAN NOT NULL DEFAULT FALSE,
 
     -- audit fields
-    create_by VARCHAR(150) NOT NULL,
+    created_by VARCHAR(150) NOT NULL,
     modified_by VARCHAR(150) NOT NULL,
-    created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    modified_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    created_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    modified_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     -- index will be created automatically on unique constraints
     CONSTRAINT pk_app_user PRIMARY KEY (id),
@@ -32,8 +32,11 @@ CREATE TABLE IF NOT EXISTS t_app_user (
 );
 
 CREATE SEQUENCE IF NOT EXISTS seq_app_user START 1
-    INCREMENT 1
+    INCREMENT BY 75
+    MINVALUE 1
+    NO MAXVALUE
     CACHE 75
     NO CYCLE
     OWNED BY t_app_user.id;
 --rollback DROP TABLE IF EXISTS t_task;
+--rollback DROP SEQUENCE IF EXISTS seq_task;
