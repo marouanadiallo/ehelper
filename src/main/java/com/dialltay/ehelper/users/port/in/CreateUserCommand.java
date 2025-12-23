@@ -3,6 +3,7 @@ package com.dialltay.ehelper.users.port.in;
 import com.dialltay.ehelper.users.domain.application.validation.BirthDatePermit;
 import com.dialltay.ehelper.users.domain.model.Gender;
 import jakarta.validation.constraints.*;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
 
@@ -22,6 +23,7 @@ public record CreateUserCommand(
         String lastName,
 
         @BirthDatePermit(minAge = 18, maxAge = 80, message = "{com.ehelper.user.birthdate.invalid}")
+        @DateTimeFormat(iso = DateTimeFormat.ISO.DATE, pattern = "dd-MM-yyyy")
         LocalDate birthDate,
 
         @NotBlank(message = "{com.ehelper.user.email.notblank")

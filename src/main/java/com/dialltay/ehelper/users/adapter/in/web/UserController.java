@@ -42,7 +42,7 @@ public class UserController {
         }
         var id = createUserUseCase.createUser(command);
 
-        model.addAttribute(WebUtils.MSG_SUCCESS, "Utilisateur créé avec succès avec l'ID: " + id);
+        model.addAttribute("message", WebUtils.getMessage(WebUtils.MSG_SUCCESS));
         return "redirect:/users";
     }
 }

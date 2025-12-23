@@ -2,21 +2,38 @@
 
 --changeset alphamar:001-create-user-table
 CREATE TABLE IF NOT EXISTS t_app_user (
-    id BIGSERIAL NOT NULL PRIMARY KEY,
+    id BIGINT NOT NULL,
     business_id UUID NOT NULL,
 
     gender VARCHAR(5) NOT NULL,
-    first_name VARCHAR(75) NOT NULL,
+    first_name VARCHAR(100) NOT NULL,
     last_name VARCHAR(50) NOT NULL,
     birth_date DATE NOT NULL,
 
-    email VARCHAR(255) NOT NULL,
-    telephone VARCHAR(50) NOT NULL,
+    email VARCHAR(150) NOT NULL,
+    telephone VARCHAR(15) NOT NULL,
+    telephone_checked BOOLEAN NOT NULL DEFAULT FALSE,
+
+    -- security fields
+    account_non_locked BOOLEAN NOT NULL DEFAULT TRUE,
+    enabled BOOLEAN NOT NULL DEFAULT FALSE,
+
+    -- audit fields
+    create_by VARCHAR(150) NOT NULL,
+    modified_by VARCHAR(150) NOT NULL,
+    created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    modified_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     -- index will be created automatically on unique constraints
+    CONSTRAINT pk_app_user PRIMARY KEY (id),
     CONSTRAINT uq_user_business_id UNIQUE (business_id),
     CONSTRAINT uq_user_email UNIQUE (email),
     CONSTRAINT uq_user_telephone UNIQUE (telephone)
 );
 
+CREATE SEQUENCE IF NOT EXISTS seq_app_user START 1
+    INCREMENT 1
+    CACHE 75
+    NO CYCLE
+    OWNED BY t_app_user.id;
 --rollback DROP TABLE IF EXISTS t_task;

@@ -7,6 +7,7 @@ import com.dialltay.ehelper.users.port.in.CreateUserUseCase;
 import com.dialltay.ehelper.users.port.out.AppUserCommands;
 import com.dialltay.ehelper.users.port.out.AppUserQueries;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class CreateUserService implements CreateUserUseCase {
@@ -20,6 +21,7 @@ public class CreateUserService implements CreateUserUseCase {
     }
 
     @Override
+    @Transactional
     public Long createUser(CreateUserCommand command) {
         var exists = userQueries.existsByEmailOrTelephone(command.email(), command.telephone());
         if (exists) {

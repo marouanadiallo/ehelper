@@ -6,3 +6,15 @@ spring:
     hikari:
       connection-timeout: 30000
       maximum-pool-size: 10
+  jpa:
+    open-in-view: false # Disable Open Session in View to prevent lazy loading issues
+    hibernate:
+      ddl-auto: validate # Use 'validate' to ensure schema matches entities without making changes
+    properties:
+      hibernate:
+        id:
+          optimizer.pooled.preferred: pooled-lo # Use pooled-lo optimizer for better ID generation performance
+        connection:
+          provider_disables_autocommit: true # Disable auto-commit for better transaction management
+        query:
+          in_clause_parameter_padding: true # Enable padding for IN clause parameters to improve performance
