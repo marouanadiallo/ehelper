@@ -1,6 +1,6 @@
 package com.dialltay.ehelper.config;
 
-import com.dialltay.ehelper.users.adapter.conversion.GenderConverter;
+import com.dialltay.ehelper.adapter.conversion.GenderConverter;
 import org.jspecify.annotations.NonNull;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.format.FormatterRegistry;
