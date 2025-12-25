@@ -1,10 +1,14 @@
 package com.dialltay.ehelper.adapter.out.persistence;
 
+import com.dialltay.ehelper.application.domain.model.UserProjections;
 import com.dialltay.ehelper.application.port.in.CreateUserCommand;
 import com.dialltay.ehelper.application.port.out.LoadUserPort;
 import com.dialltay.ehelper.application.port.out.UpdateUserPort;
 import com.dialltay.ehelper.commons.annotations.PersistenceAdapter;
 import com.dialltay.ehelper.application.port.out.CreateUserPort;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -48,6 +52,11 @@ public class UserPersistenceAdapter implements CreateUserPort, UpdateUserPort, L
     @Override
     public boolean existsByEmailOrTelephone(String email, String telephone) {
         return this.userRepository.existsByEmailOrTelephone(email, telephone);
+    }
+
+    @Override
+    public Slice<UserProjections.UserTable> loadAUserSlice(Pageable pageable) {
+        return null;
     }
 
     @Override

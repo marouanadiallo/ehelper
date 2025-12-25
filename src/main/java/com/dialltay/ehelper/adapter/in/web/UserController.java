@@ -2,9 +2,9 @@ package com.dialltay.ehelper.adapter.in.web;
 
 import com.dialltay.ehelper.application.port.in.CreateUserCommand;
 import com.dialltay.ehelper.application.port.in.CreateUserUseCase;
+import com.dialltay.ehelper.application.port.in.GetUserSliceUseCase;
 import com.dialltay.ehelper.util.WebUtils;
 import jakarta.validation.Valid;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -15,13 +15,16 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
 
     private final CreateUserUseCase createUserUseCase;
-    public UserController(CreateUserUseCase createUserUseCase) {
+    private final GetUserSliceUseCase userSliceUseCase;
+
+    public UserController(CreateUserUseCase createUserUseCase,
+                          GetUserSliceUseCase userSliceUseCase) {
         this.createUserUseCase = createUserUseCase;
+        this.userSliceUseCase = userSliceUseCase;
     }
 
     @GetMapping
-    public String users(@RequestParam(value = "page", defaultValue = "0") Pageable pageable,
-                        Model model) {
+    public String users(Model model) {
         return "users/index";
     }
 
