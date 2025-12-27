@@ -6,4 +6,6 @@ import org.springframework.data.domain.Slice;
 
 public interface GetUserSliceUseCase {
     Slice<UserProjections.UserTable> firstSliceOfUsers();
+
+    Slice<UserProjections.UserTable> userSliceAt(int page, int size);
 }

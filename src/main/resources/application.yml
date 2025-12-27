@@ -1,4 +1,8 @@
 spring:
+  mvc:
+    hiddenmethod:
+      filter:
+        enabled: true # Enable HiddenHttpMethodFilter to support HTTP methods like PUT and DELETE via forms
   datasource:
     hikari:
       connection-timeout: 30000 # 30 seconds (avoid request timeouts)

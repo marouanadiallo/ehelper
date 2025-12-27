@@ -1,4 +1,10 @@
 spring:
+  thymeleaf:
+    cache: false
+  web:
+    resources:
+      chain:
+        cache: false
   datasource:
     url: ${LOCAL_DB_URL:jdbc:postgresql://localhost:5432/ehelperDB}
     username: ${LOCAL_DB_USERNAME:ehelperUser}

@@ -22,9 +22,14 @@ public class GerUsersService implements GetUserSliceUseCase {
     public Slice<UserProjections.UserTable> firstSliceOfUsers() {
 
         return this.loadUserPort.loadAUserSlice(
-                PageRequest.of(0, 5,
-                                Sort.by("lastName").ascending()
-                )
+                PageRequest.of(0, 5, Sort.by("auditMetadata.createdAt").descending())
+        );
+    }
+
+    @Override
+    public Slice<UserProjections.UserTable> userSliceAt(int page, int size) {
+        return this.loadUserPort.loadAUserSlice(
+                PageRequest.of(page, size, Sort.by("auditMetadata.createdAt").descending())
         );
     }
 }

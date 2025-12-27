@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:hx="http://www.w3.org/1999/xhtml"
+>
+    <tbody th:fragment="userTableRows (userSlice)" id="userTableBody">
+        <tr th:each="appUser : ${userSlice.content}" th:object="${appUser}">
+            <td th:text="${appUser.lastName + ' ' + appUser.firstName}"></td>
+            <td th:text="${appUser.email}"></td>
+            <td th:text="${appUser.telephone}"></td>
+        </tr>
+    </tbody>
+
+</html>

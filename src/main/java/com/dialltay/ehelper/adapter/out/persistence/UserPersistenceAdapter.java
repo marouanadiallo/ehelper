@@ -56,7 +56,7 @@ public class UserPersistenceAdapter implements CreateUserPort, UpdateUserPort, L
 
     @Override
     public Slice<UserProjections.UserTable> loadAUserSlice(Pageable pageable) {
-        return null;
+        return this.userRepository.findAllBy(pageable);
     }
 
     @Override
