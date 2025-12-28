@@ -15,57 +15,59 @@
     <div layout:fragment="content">
       <!-- Header -->
       <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
-    <h1 class="text-2xl font-semibold text-granite-900">Utilisateurs</h1>
+        <h1 class="text-2xl font-semibold text-granite-900">Utilisateurs</h1>
 
-    <div class="flex items-center gap-2">
-      <!-- Import button -->
-      <label class="flex items-center gap-2 px-4 py-2 border border-granite-300 rounded-lg hover:bg-granite-50 transition-colors cursor-pointer text-sm font-medium text-granite-700">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5m-13.5-9L12 3m0 0 4.5 4.5M12 3v13.5" />
-        </svg>
-        <span>Importer</span>
-        <input type="file" class="hidden" accept=".csv,.xlsx" />
-      </label>
+        <div class="flex items-center gap-2">
+          <!-- Import button -->
+          <label class="flex items-center gap-2 px-4 py-2 border border-granite-300 rounded-lg hover:bg-granite-50 transition-colors cursor-pointer text-sm font-medium text-granite-700">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5m-13.5-9L12 3m0 0 4.5 4.5M12 3v13.5" />
+            </svg>
+            <span>Importer</span>
+            <input type="file" class="hidden" accept=".csv,.xlsx" />
+          </label>
 
-      <!-- Add button -->
-      <a th:href="@{/users/form/create}" class="flex items-center gap-2 px-4 py-2 bg-granite-700 text-white rounded-lg hover:bg-granite-800 transition-colors text-sm font-medium">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-        </svg>
-        <span>Ajouter</span>
-      </a>
-    </div>
-  </div>
+          <!-- Add button -->
+          <a th:href="@{/users/form/create}" class="flex items-center gap-2 px-4 py-2 bg-granite-700 text-white rounded-lg hover:bg-granite-800 transition-colors text-sm font-medium">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+            </svg>
+            <span>Ajouter</span>
+          </a>
+        </div>
+      </div>
 
-    <!-- Table -->
-    <div class="overflow-x-auto">
-        <table id="user-table">
-            <thead>
-                <tr>
-                    <th>Nom et prénom</th>
-                    <th>E-mail</th>
-                    <th>Téléphone</th>
-                </tr>
-            </thead>
-            <tbody hx-trigger="load" th:hx-get="@{/users/slice}" hx-swap="outerHTML" hx-target="this">
-                <tr>
-                    <td colspan="3" class="text-center py-4 text-granite-500">Chargement...</td>
-                </tr>
-            </tbody>
+      <!-- Table -->
+      <div class="overflow-x-auto">
+        <table id="user-table"
+          class="border-separate border-spacing-0 min-w-full border border-granite-200 rounded-lg"
+        >
+          <caption class="caption-bottom my-3 text-sm ">
+            Afficher le nombre total : <span>0</span> utilisateurs
+          </caption>
+          <thead class="bg-granite-50 text-granite-700 text-left text-md font-semibold">
+            <tr class="rounded-t-lg">
+              <th class="px-2 py-3 rounded-tl-lg">Prénom et nom</th>
+              <th class="px-2 py-3">E-mail</th>
+              <th class="px-2 py-3 rounded-tr-lg">Téléphone</th>
+              <th class="px-2 py-3 rounded-tr-lg">Actions</th>
+            </tr>
+          </thead>
+
+          <!-- tag :: userTableBody -->
+          <tbody hx-trigger="load" th:hx-get="@{/users/slice}" hx-swap="outerHTML" hx-target="this">
+            <tr>
+              <td colspan="3" class="text-center py-4 text-granite-500">Chargement...</td>
+            </tr>
+          </tbody>
+          <!-- endTag :: userTableBody -->
         </table>
 
-        <!-- Pagination -->
-        <div class="mt-4 flex justify-end gap-2">
-            <button type="button"
-                    th:hx-get="@{/users/slice}"
-                    hx-target="#userTableBody"
-                    hx-trigger="click"
-                    hx-swap="outerHTML"
-                    class="px-4 py-2 bg-granite-200 text-granite-700 rounded-lg hover:bg-granite-300 transition-colors text-sm font-medium"
-            >Next</button>
-        </div>
+        <!-- tag :: userTablePagination -->
+        <div id="userTablePagination" class="mt-4 flex justify-end items-center gap-2"></div>
+        <!-- endTag :: userTablePagination -->
+      </div>
     </div>
-</div>
 
     <th:block layout:fragment="scripts">
       <script th:src="${asset.get('users.js')}"></script>

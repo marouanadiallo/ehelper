@@ -6,7 +6,6 @@ import com.dialltay.ehelper.application.port.in.CreateUserCommand;
 import com.dialltay.ehelper.application.port.in.CreateUserUseCase;
 import com.dialltay.ehelper.application.port.in.GetUserSliceUseCase;
 
-import io.github.wimdeblauwe.htmx.spring.boot.mvc.HtmxResponse;
 import io.github.wimdeblauwe.htmx.spring.boot.mvc.HxRequest;
 
 import jakarta.validation.Valid;
@@ -18,6 +17,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.View;
+import org.springframework.web.servlet.view.FragmentsRendering;
 
 @Controller
 @RequestMapping("/users")
@@ -39,20 +40,22 @@ public class UserController {
     }
 
     @GetMapping
-    public String users() {
+    public String users(Model model) {
         return "users/index";
     }
 
     @GetMapping("/slice")
     @HxRequest
-    public String htmxUsersSlice(@RequestParam(name = "page", defaultValue = "0", required = false) int page,
-                                 @RequestParam(name = "size", defaultValue = "5", required = false) int size,
-                                 Model model) {
+    public View htmxUsersSlice(@RequestParam(name = "page", defaultValue = "0", required = false) int page,
+                               @RequestParam(name = "size", defaultValue = "5", required = false) int size,
+                               Model model) {
         var userSlice = userSliceUseCase.userSliceAt(page, size);
-        logger.info("user slice number : {}", userSlice.getNumber());
         model.addAttribute("userSlice", userSlice);
-        model.addAttribute("sliceCursor", SliceCursor.moveTo(page + 1, size));
-        return "users/fragments :: userTableRows";
+        model.addAttribute("sliceCursor", SliceCursor.moveTo(page, size));
+        return FragmentsRendering
+                .fragment("users/fragments :: userTableRows")
+                .fragment("users/fragments :: userTablePagination")
+                .build();
     }
 
     @GetMapping("/{id}/details")

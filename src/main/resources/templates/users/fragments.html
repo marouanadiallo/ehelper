@@ -1,14 +1,65 @@
 <!DOCTYPE html>
 <html lang="en"
       xmlns:th="http://www.thymeleaf.org"
-      xmlns:hx="http://www.w3.org/1999/xhtml"
 >
     <tbody th:fragment="userTableRows (userSlice)" id="userTableBody">
-        <tr th:each="appUser : ${userSlice.content}" th:object="${appUser}">
-            <td th:text="${appUser.lastName + ' ' + appUser.firstName}"></td>
-            <td th:text="${appUser.email}"></td>
-            <td th:text="${appUser.telephone}"></td>
+        <tr th:each="appUser : ${userSlice.content}" th:object="${appUser}"
+            class="even:bg-granite-100/30 transition-colors"
+        >
+            <td class="px-2 py-3">
+                <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 rounded-full bg-granite-600 text-white flex items-center justify-center text-sm font-medium">
+                        <span th:text="${#strings.substring(appUser.firstName, 0, 1) + #strings.substring(appUser.lastName, 0, 1)}"></span>
+                    </div>
+                    <span th:text="${appUser.firstName + ' ' + appUser.lastName}"></span>
+                </div>
+            </td>
+            <td class="px-2 py-3" th:text="${appUser.email}"></td>
+            <td class="px-2 py-3" th:text="${appUser.telephone}"></td>
+            <td class="px-2 py-3">
+                <button class="px-3 py-1.5 rounded transition-colors">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM12.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM18.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z" />
+                    </svg>
+                </button>
+            </td>
         </tr>
     </tbody>
 
+    <div th:fragment="userTablePagination"
+        id="userTablePagination"
+        class="mt-4 flex justify-end intems-center gap-2"
+        hx-swap-oob="true"
+    >
+        <button type="button"
+            th:hx-get="@{/users/slice(page=${sliceCursor.prevPage}, size=${sliceCursor.size})}"
+            hx-target="#userTableBody"
+            hx-trigger="click"
+            hx-swap="outerHTML"
+            th:disabled="${userSlice.isFirst}"
+            class="px-4 py-2 bg-granite-200 text-granite-700 rounded-lg
+                flex justify-between items-center gap-2
+              hover:bg-granite-300 transition-colors text-sm font-medium"
+        >
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />
+            </svg>
+            <span class="text-sm">Précedent</span>
+        </button>
+        <button type="button"
+            th:hx-get="@{/users/slice(page=${sliceCursor.nextPage}, size=${sliceCursor.size})}"
+            hx-target="#userTableBody"
+            hx-trigger="click"
+            hx-swap="outerHTML"
+            th:disabled="${userSlice.isLast}"
+            class="px-4 py-2 bg-granite-200 text-granite-700 rounded-lg
+                flex justify-between items-center gap-2
+                hover:bg-granite-300 transition-colors text-sm font-medium"
+        >
+            <span class="text-sm">Suivant</span>
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
+            </svg>
+        </button>
+    </div>
 </html>

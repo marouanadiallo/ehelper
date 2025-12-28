@@ -6,7 +6,7 @@
     layout:decorate="~{layout}"
 >
     <head>
-        <title>Créer un utilisateur</title>       
+        <title>Créer un utilisateur</title>
     </head>
 
     <body>
@@ -42,9 +42,8 @@
                                     name="gender" 
                                     id="homme" 
                                     value="Homme"
-                                    autofocus
-                                    x-model="ffields.gender"
                                     @blur="validateField('gender')"
+                                    x-model="ffields.gender"
                                     th:field="*{gender}"
                                     class="w-4 h-4 border-2 border-granite-300 rounded-full appearance-none cursor-pointer transition-all
                                         checked:border-granite-600 checked:border-[5px] 
@@ -60,9 +59,9 @@
                                     type="radio" 
                                     name="gender" 
                                     id="femme" 
-                                    value="Femme" 
-                                    x-model="ffields.gender"
+                                    value="Femme"
                                     @blur="validateField('gender')"
+                                    x-model="ffields.gender"
                                     th:field="*{gender}"
                                     class="w-4 h-4 border-2 border-granite-300 rounded-full appearance-none cursor-pointer transition-all
                                         checked:border-granite-600 checked:border-[5px] 
@@ -205,7 +204,7 @@
         </div>
 
         <th:block layout:fragment="scripts">
-            <script th:src="${asset.get('create-user')}"></script>
+            <script type="text/javascript" th:src="${asset.get('create-user')}"></script>
         </th:block>
     </body>
 </html>
