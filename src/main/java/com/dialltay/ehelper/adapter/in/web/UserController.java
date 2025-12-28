@@ -17,6 +17,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.View;
 import org.springframework.web.servlet.view.FragmentsRendering;
 
@@ -59,9 +60,17 @@ public class UserController {
     }
 
     @GetMapping("/{id}/details")
+    @HxRequest
     public String userDetails(@PathVariable Long id, Model model) {
         // Implementation for user details goes here
         return "users/details";
+    }
+
+    @PostMapping("/upload/batch")
+    @HxRequest
+    public String createUserBatch(MultipartFile file, Model model) {
+        // Implementation for bulk user creation goes here
+        return "users/index";
     }
 
     @GetMapping("/form/create")
