@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en"
-      xmlns:th="http://www.thymeleaf.org"
+    xmlns:th="http://www.thymeleaf.org"
 >
     <tbody th:fragment="userTableRows (userSlice)" id="userTableBody">
         <tr th:each="appUser : ${userSlice.content}" th:object="${appUser}"

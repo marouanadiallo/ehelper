@@ -22,8 +22,8 @@ public class AssetConfig {
     private final static Map<String, String> DEFAULT_MANIFEST = Map.of(
             "main.css", "/main.bundle.css",
             "main.js", "/js/main.bundle.js",
-            "users.js", "/js/users.bundle.js",
-            "create-user", "/js/create-user.bundle.js"
+            "users-index.js", "/js/users-index.bundle.js",
+            "create-user-form.js", "/js/create-user-form.bundle.js"
     );
 
     private final static Logger LOGGER = LoggerFactory.getLogger(AssetConfig.class);

@@ -10,84 +10,138 @@
 </head>
 
 <body>
-    <span layout:fragment="breadcrumb-current">Utilisateurs</span>
+  <span layout:fragment="breadcrumb-current">Utilisateurs</span>
 
-    <div layout:fragment="content" x-data="userIndexPage">
-      <!-- Header -->
-      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
-        <h1 class="text-2xl font-semibold text-granite-900">Utilisateurs</h1>
+  <div layout:fragment="content" x-data="userIndexPage">
+    <!-- Header -->
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+      <h1 class="text-2xl font-semibold text-granite-900">Utilisateurs</h1>
 
-        <div class="flex items-center gap-2">
-          <!-- Import button -->
-          <form id="uploadUserBatchForm"
-                hx-encoding="multipart/form-data"
-                th:hx-post="@{/users/upload/batch}"
-                hx-target="#uploadResult"
-                @submit.prevent=""
-                @htmx:before-request="loading = true"
-                @htmx:after-request="loading = false"
-          >
-            <label class="flex items-center gap-2 px-4 py-2 border border-granite-300 rounded-lg
-              hover:bg-granite-50 transition-colors cursor-pointer text-sm font-medium text-granite-700"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5m-13.5-9L12 3m0 0 4.5 4.5M12 3v13.5" />
-              </svg>
-              <span>Importer</span>
-              <input type="file" class="hidden"
-                     name="file"
-                     accept=".csv"
-                     @change="$el.form.requestSubmit()"
-              />
-            </label>
-          </form>
-          <div x-show="loading" class="mt-2">Chargement...</div>
-          <div id="uploadResult" x-cloak x-show="false"></div>
-
-          <!-- Add button -->
-          <a th:href="@{/users/form/create}" class="flex items-center gap-2 px-4 py-2 bg-granite-700 text-white rounded-lg hover:bg-granite-800 transition-colors text-sm font-medium">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-            </svg>
-            <span>Ajouter</span>
-          </a>
-        </div>
-      </div>
-
-      <!-- Table -->
-      <div class="overflow-x-auto">
-        <table id="user-table"
-          class="border-separate border-spacing-0 min-w-full border border-granite-200 rounded-lg"
+      <div class="flex items-center gap-2">
+        <!-- Import button -->
+        <form id="uploadUserBatchForm"
+          hx-encoding="multipart/form-data"
+          th:hx-post="@{/users/upload/batch}"
+          hx-target="#uploadResult"
+          x-ref="uploadUserBatchForm"
+          @submit.prevent=""
+          @htmx:before-request="loading = true"
+          @htmx:after-request="loading = false"
         >
-          <caption class="caption-bottom my-3 text-sm ">
-            Afficher le nombre total : <span>0</span> utilisateurs
-          </caption>
-          <thead class="bg-granite-50 text-granite-700 text-left text-md font-semibold">
-            <tr class="rounded-t-lg">
-              <th class="px-2 py-3 rounded-tl-lg">Prénom et nom</th>
-              <th class="px-2 py-3">E-mail</th>
-              <th class="px-2 py-3 rounded-tr-lg">Téléphone</th>
-              <th class="px-2 py-3 rounded-tr-lg">Actions</th>
-            </tr>
-          </thead>
+          <label class="flex items-center gap-2 px-4 py-2 border border-granite-300 rounded-lg
+            hover:bg-granite-50 transition-colors cursor-pointer text-sm font-medium text-granite-700"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5m-13.5-9L12 3m0 0 4.5 4.5M12 3v13.5" />
+            </svg>
+            <span>Importer</span>
+            <input type="file" class="hidden"
+              name="file"
+              accept=".csv"
+              @change="previewUserBatchUpload($event)"
+            />
+          </label>
 
-          <!-- tag :: userTableBody -->
-          <tbody hx-trigger="load" th:hx-get="@{/users/slice}" hx-swap="outerHTML" hx-target="this">
-            <tr>
-              <td colspan="3" class="text-center py-4 text-granite-500">Chargement...</td>
-            </tr>
-          </tbody>
-          <!-- endTag :: userTableBody -->
-        </table>
+          <template x-teleport="body">
+            <div x-show="showPreviewModal" class="fixed inset-0 flex items-center 
+              justify-center bg-black/25 z-50"
+            >
+              <div class="bg-white p-6 rounded-lg shadow-lg flex flex-col items-center gap-4">
+                <table class="border-separate border-spacing-0 min-w-full border border-granite-200 rounded-lg">
+                <caption class="caption-bottom my-3 text-sm font-semibold">
+                  Afficher le nombre total : <span class="text-granite-700" x-text="users.length">0</span> <span class="text-granite-700">utilisateurs</span>
+                </caption>
+                <thead>
+                  <tr class="bg-granite-50 text-granite-700 text-left text-md font-semibold">
+                    <th class="px-4 py-2">Civilité</th>
+                    <th class="px-4 py-2">Prénom</th>
+                    <th class="px-4 py-2">Nom</th>
+                    <th class="">Date de naissance</th>
+                    <th class="px-4 py-2">E-mail</th>
+                    <th class="px-4 py-2">Téléphone</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <template x-for="user in users" :key="user.email">
+                    <tr>
+                      <td class="border px-4 py-2" x-text="user.gender"></td>
+                      <td class="border px-4 py-2" x-text="user.firstName"></td>
+                      <td class="border px-4 py-2" x-text="user.lastName"></td>
+                      <td class="border px-4 py-2" x-text="user.birthDate"></td>
+                      <td class="border px-4 py-2" x-text="user.email"></td>
+                      <td class="border px-4 py-2" x-text="user.telephone"></td>
+                    </tr>
+                  </template>
+                </tbody>
+                </table>
+                <div class="mt-4 flex gap-4">
+                  <button @click="resetAll()"
+                    class="px-4 py-2 bg-red-50 border border-red-200 rounded-lg hover:cursor-pointer transition-colors"
+                  >
+                    Annuler
+                  </button>
+                  <button
+                    class="px-4 py-2 bg-granite-700 text-white rounded-lg hover:cursor-pointer
+                      hover:bg-granite-800 transition-colors font-medium text-sm"
+                    @click="loading = true; $refs.uploadUserBatchForm.requestSubmit();"
+                    :disabled="loading"
+                  >
+                    <span x-show="!loading">Confirmer l'import</span>
+                    <span x-show="loading">Envoi en cours...</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </template>
+        </form>
+        <div id="uploadResult" x-cloak x-show="false" style="display: none;"></div>
 
-        <!-- tag :: userTablePagination -->
-        <div id="userTablePagination" class="mt-4 flex justify-end items-center gap-2"></div>
-        <!-- endTag :: userTablePagination -->
+        <!-- Add button -->
+        <a th:href="@{/users/form/create}" class="flex items-center gap-2 px-4 py-2 bg-granite-700 text-white rounded-lg hover:bg-granite-800 transition-colors text-sm font-medium">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+          </svg>
+          <span>Ajouter</span>
+        </a>
       </div>
     </div>
 
-    <th:block layout:fragment="scripts">
-      <script th:src="${asset.get('users.js')}"></script>
-    </th:block>
+    <!-- Table -->
+    <div class="overflow-x-auto">
+      <table id="user-table"
+        class="border-separate border-spacing-0 min-w-full border border-granite-200 rounded-lg"
+      >
+        <caption class="caption-bottom my-3 text-sm ">
+          Afficher le nombre total : <span>0</span> utilisateurs
+        </caption>
+        <thead class="bg-granite-50 text-granite-700 text-left text-md font-semibold">
+          <tr class="rounded-t-lg">
+            <th class="px-2 py-3 rounded-tl-lg">Prénom et nom</th>
+            <th class="px-2 py-3">E-mail</th>
+            <th class="px-2 py-3 rounded-tr-lg">Téléphone</th>
+            <th class="px-2 py-3 rounded-tr-lg">Actions</th>
+          </tr>
+        </thead>
+
+        <!-- tag :: userTableBody -->
+        <tbody hx-trigger="load" th:hx-get="@{/users/slice}" hx-swap="outerHTML" hx-target="this">
+          <tr>
+            <td colspan="4">
+              <th:block th:replace="~{commons-fragments/fragments :: loadingSpinner('Chargement des utilisateurs...')}"></th:block>
+            </td>
+          </tr>
+        </tbody>
+        <!-- endTag :: userTableBody -->
+      </table>
+
+      <!-- tag :: userTablePagination -->
+      <div id="userTablePagination" class="mt-4 flex justify-end items-center gap-2"></div>
+      <!-- endTag :: userTablePagination -->
+    </div>
+  </div>
+
+  <th:block layout:fragment="scripts">
+    <script th:src="${asset.get('users-index.js')}"></script>
+  </th:block>
 </body>
 </html>
