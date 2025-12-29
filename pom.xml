@@ -96,6 +96,14 @@
         </dependency>
         <!-- End of WebJars dependencies -->
 
+        <!-- tag :: csv-dependency [] -->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-csv</artifactId>
+            <version>1.14.1</version>
+        </dependency>
+        <!-- end::csv-dependency [] -->
+
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>

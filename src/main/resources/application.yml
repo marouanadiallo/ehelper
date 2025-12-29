@@ -1,4 +1,8 @@
 spring:
+  servlet:
+    multipart:
+      max-file-size: 10MB # Set maximum file upload size
+      max-request-size: 10MB # Set maximum request size for multipart requests
   mvc:
     hiddenmethod:
       filter:

@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html   lang="fr"
-        xmlns:th="http://www.thymeleaf.org"
-        xmlns="http://www.w3.org/1999/xhtml"
-        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-        layout:decorate="~{layout}"
+<html lang="fr"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}"
 >
 <head>
   <title>Utilisateurs</title>
@@ -12,24 +12,37 @@
 <body>
     <span layout:fragment="breadcrumb-current">Utilisateurs</span>
 
-    <div layout:fragment="content">
+    <div layout:fragment="content" x-data="userIndexPage">
       <!-- Header -->
       <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
         <h1 class="text-2xl font-semibold text-granite-900">Utilisateurs</h1>
 
         <div class="flex items-center gap-2">
           <!-- Import button -->
-          <form id="uploadUserBatchForm" hx-encoding="multipart/form-data" th:hx-post="@{/users/upload/batch}">
+          <form id="uploadUserBatchForm"
+                hx-encoding="multipart/form-data"
+                th:hx-post="@{/users/upload/batch}"
+                hx-target="#uploadResult"
+                @submit.prevent=""
+                @htmx:before-request="loading = true"
+                @htmx:after-request="loading = false"
+          >
             <label class="flex items-center gap-2 px-4 py-2 border border-granite-300 rounded-lg
-            hover:bg-granite-50 transition-colors cursor-pointer text-sm font-medium text-granite-700"
+              hover:bg-granite-50 transition-colors cursor-pointer text-sm font-medium text-granite-700"
             >
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5m-13.5-9L12 3m0 0 4.5 4.5M12 3v13.5" />
               </svg>
               <span>Importer</span>
-              <input type="file" class="hidden" accept=".csv,.xlsx" hx-trigger="change" hx-target="#uploadUserBatchForm" hx-swap="none" />
+              <input type="file" class="hidden"
+                     name="file"
+                     accept=".csv"
+                     @change="$el.form.requestSubmit()"
+              />
             </label>
           </form>
+          <div x-show="loading" class="mt-2">Chargement...</div>
+          <div id="uploadResult" x-cloak x-show="false"></div>
 
           <!-- Add button -->
           <a th:href="@{/users/form/create}" class="flex items-center gap-2 px-4 py-2 bg-granite-700 text-white rounded-lg hover:bg-granite-800 transition-colors text-sm font-medium">

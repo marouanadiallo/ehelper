@@ -68,8 +68,11 @@ public class UserController {
 
     @PostMapping("/upload/batch")
     @HxRequest
-    public String createUserBatch(MultipartFile file, Model model) {
-        // Implementation for bulk user creation goes here
+    public String createUserBatch(@RequestParam("file") MultipartFile file, Model model) {
+        if (file.isEmpty()) {
+            model.addAttribute("error", WebUtils.getMessage("file.upload.empty"));
+            return "users/index";
+        }
         return "users/index";
     }
 
