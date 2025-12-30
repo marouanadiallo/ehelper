@@ -4,19 +4,19 @@
 >
     <tbody th:fragment="userTableRows (userSlice)" id="userTableBody">
         <tr th:each="appUser : ${userSlice.content}" th:object="${appUser}"
-            class="even:bg-granite-100/30 transition-colors"
+            class="hover:bg-granite-50 transition-colors border-b border-granite-200"
         >
-            <td class="px-2 py-3">
+            <td class="px-6 py-4 text-granite-900">
                 <div class="flex items-center gap-3">
-                    <div class="w-8 h-8 rounded-full bg-granite-600 text-white flex items-center justify-center text-sm font-medium">
+                    <div class="bg-granite-600 text-white w-10 h-10 rounded-full flex items-center justify-center text-sm font-semibold">
                         <span th:text="${#strings.substring(appUser.firstName, 0, 1) + #strings.substring(appUser.lastName, 0, 1)}"></span>
                     </div>
-                    <span th:text="${appUser.firstName + ' ' + appUser.lastName}"></span>
+                    <span class="font-medium" th:text="${appUser.firstName + ' ' + appUser.lastName}"></span>
                 </div>
             </td>
-            <td class="px-2 py-3" th:text="${appUser.email}"></td>
-            <td class="px-2 py-3" th:text="${appUser.telephone}"></td>
-            <td class="px-2 py-3">
+            <td class="px-6 py-4 text-sm text-granite-900" th:text="${appUser.email}"></td>
+            <td class="px-6 py-4 text-sm text-granite-900" th:text="${appUser.telephone}"></td>
+            <td class="px-6 py-4 text-granite-700 hover:text-granite-900">
                 <button class="px-3 py-1.5 rounded transition-colors">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM12.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM18.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z" />
@@ -37,9 +37,8 @@
             hx-trigger="click"
             hx-swap="outerHTML transition:true"
             th:disabled="${userSlice.isFirst}"
-            class="bg-granite-200 text-granite-700 rounded-lg
-                flex justify-between items-center gap-1
-              hover:bg-granite-300 px-2 py-1 text-xs font-medium transition-colors"
+            class="px-4 py-2 rounded text-sm font-medium flex items-center gap-2 transition-colors
+             bg-granite-200 hover:bg-granite-300 text-granite-800 hover:cursor-pointer"
         >
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />
@@ -52,9 +51,8 @@
             hx-trigger="click"
             hx-swap="outerHTML transition:true"
             th:disabled="${userSlice.isLast}"
-            class="bg-granite-200 text-granite-700 rounded-lg
-                flex justify-between items-center gap-1
-                hover:bg-granite-300 px-2 py-1 text-xs font-medium transition-colors"
+            class="px-4 py-2 rounded text-sm font-medium flex items-center gap-2 transition-colors
+             bg-granite-200 hover:bg-granite-300 text-granite-800 hover:cursor-pointer"
         >
             <span class="text-sm">Suivant</span>
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">

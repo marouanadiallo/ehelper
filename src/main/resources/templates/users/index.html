@@ -47,33 +47,52 @@
               justify-center bg-black/25 z-50"
             >
               <div class="bg-white p-6 rounded-lg shadow-lg flex flex-col items-center gap-4">
-                <table class="border-separate border-spacing-0 min-w-full border border-granite-200 rounded-lg">
-                <caption class="caption-bottom my-3 text-sm font-semibold">
-                  Afficher le nombre total : <span class="text-granite-700" x-text="users.length">0</span> <span class="text-granite-700">utilisateurs</span>
-                </caption>
-                <thead>
-                  <tr class="bg-granite-50 text-granite-700 text-left text-md font-semibold">
-                    <th class="px-4 py-2">Civilité</th>
-                    <th class="px-4 py-2">Prénom</th>
-                    <th class="px-4 py-2">Nom</th>
-                    <th class="">Date de naissance</th>
-                    <th class="px-4 py-2">E-mail</th>
-                    <th class="px-4 py-2">Téléphone</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <template x-for="user in users" :key="user.email">
-                    <tr>
-                      <td class="border px-4 py-2" x-text="user.gender"></td>
-                      <td class="border px-4 py-2" x-text="user.firstName"></td>
-                      <td class="border px-4 py-2" x-text="user.lastName"></td>
-                      <td class="border px-4 py-2" x-text="user.birthDate"></td>
-                      <td class="border px-4 py-2" x-text="user.email"></td>
-                      <td class="border px-4 py-2" x-text="user.telephone"></td>
-                    </tr>
-                  </template>
-                </tbody>
-                </table>
+                <h2 class="text-lg font-semibold text-granite-900 w-full">Aperçu des utilisateurs à importer</h2>
+                <template x-if="errors.length > 0">
+                  <div class="w-full bg-red-50 border border-red-200 text-red-900 p-2 rounded mb-4">
+                      <ul>
+                        <template x-for="error in errors">
+                          <li x-text="error"></li>
+                        </template>
+                      </ul>
+                  </div>
+                </template>
+                <div class="border border-granite-200 rounded-lg overflow-hidden">
+                  <table>
+                    <caption class="caption-bottom text-sm my-3 text-granite-700">
+                      Nombre total d'utilisateurs à importer : <span x-text="users.length"></span>
+                    </caption>
+                    <thead>
+                      <tr>
+                        <th class="px-6 py-3 text-left text-sm bg-granite-100 font-bold text-granite-800">Civilité</th>
+                        <th class="px-6 py-3 text-left text-sm bg-granite-100 font-bold text-granite-800">Nom</th>
+                        <th class="px-6 py-3 text-left text-sm bg-granite-100 font-bold text-granite-800">Prénom</th>
+                        <th class="px-6 py-3 text-left text-sm bg-granite-100 font-bold text-granite-800">E-mail</th>
+                        <th class="px-6 py-3 text-left text-sm bg-granite-100 font-bold text-granite-800">Téléphone</th>
+                        <th class="px-6 py-3 text-left text-sm bg-granite-100 font-bold text-granite-800">Date de naissance</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <template x-for="user in users" :key="user.email">
+                        <tr class="hover:bg-granite-50 transition-colors border-b border-granite-200">
+                          <td class="px-6 py-4 text-sm text-granite-900" x-text="user.gender"></td>
+                          <td class="px-6 py-4 text-sm text-granite-900" x-text="user.lastName"></td>
+                          <td class="px-6 py-4 text-sm text-granite-900" x-text="user.firstName"></td>
+                          <td class="px-6 py-4 text-sm text-granite-900" x-text="user.email"></td>
+                          <td class="px-6 py-4 text-sm text-granite-900" x-text="user.telephone"></td>
+                          <td class="px-6 py-4 text-sm text-granite-900" x-text="user.birthDate"></td>
+                        </tr>
+                      </template>
+                      <template x-if="users.length === 0">
+                        <tr>
+                          <td colspan="6" class="px-6 py-4 text-sm text-granite-900 text-center">
+                           Fichier invalide ou aucun utilisateur à importer.
+                          </td>
+                        </tr>
+                      </template>
+                    </tbody>
+                  </table>
+                </div>
                 <div class="mt-4 flex gap-4">
                   <button @click="resetAll()"
                     class="px-4 py-2 bg-red-50 border border-red-200 rounded-lg hover:cursor-pointer transition-colors"
@@ -81,13 +100,19 @@
                     Annuler
                   </button>
                   <button
-                    class="px-4 py-2 bg-granite-700 text-white rounded-lg hover:cursor-pointer
+                    class="px-4 py-2 bg-granite-700 text-white rounded-lg hover:cursor-pointer flex items-center gap-2
                       hover:bg-granite-800 transition-colors font-medium text-sm"
                     @click="loading = true; $refs.uploadUserBatchForm.requestSubmit();"
                     :disabled="loading"
                   >
-                    <span x-show="!loading">Confirmer l'import</span>
-                    <span x-show="loading">Envoi en cours...</span>
+                    <svg x-show="!loading" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" />
+                    </svg>
+                    <span >Confirmer l'import</span>
+                    <svg x-show="loading" class="animate-spin size-6 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                      <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                      <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
                   </button>
                 </div>
               </div>
@@ -107,36 +132,46 @@
     </div>
 
     <!-- Table -->
-    <div class="overflow-x-auto">
-      <table id="user-table"
-        class="border-separate border-spacing-0 min-w-full border border-granite-200 rounded-lg"
-      >
-        <caption class="caption-bottom my-3 text-sm ">
-          Afficher le nombre total : <span>0</span> utilisateurs
-        </caption>
-        <thead class="bg-granite-50 text-granite-700 text-left text-md font-semibold">
-          <tr class="rounded-t-lg">
-            <th class="px-2 py-3 rounded-tl-lg">Prénom et nom</th>
-            <th class="px-2 py-3">E-mail</th>
-            <th class="px-2 py-3 rounded-tr-lg">Téléphone</th>
-            <th class="px-2 py-3 rounded-tr-lg">Actions</th>
-          </tr>
-        </thead>
+    <div>
+      <div class="border border-granite-200 rounded-lg overflow-hidden shadow-sm">
+        <table id="user-table" class="w-full">
+          <thead>
+            <tr>
+              <th class="px-6 py-3 text-left text-sm bg-granite-100 font-bold text-granite-800">Prénom et nom</th>
+              <th class="px-6 py-3 text-left text-sm bg-granite-100 font-bold text-granite-800">E-mail</th>
+              <th class="px-6 py-3 text-left text-sm bg-granite-100 font-bold text-granite-800">Téléphone</th>
+              <th class="px-6 py-3 text-left text-sm bg-granite-100 font-bold text-granite-800">Actions</th>
+            </tr>
+          </thead>
+  
+          <!-- tag :: userTableBody -->
+          <tbody hx-trigger="load" th:hx-get="@{/users/slice}" hx-swap="outerHTML" hx-target="this">
+            <tr>
+              <td colspan="4" class="px-6 py-4 text-sm text-granite-900">
+                <th:block th:replace="~{commons-fragments/fragments :: loadingSpinner('Chargement des utilisateurs...')}"></th:block>
+              </td>
+            </tr>
+          </tbody>
+          <!-- endTag :: userTableBody -->
+        </table>
 
-        <!-- tag :: userTableBody -->
-        <tbody hx-trigger="load" th:hx-get="@{/users/slice}" hx-swap="outerHTML" hx-target="this">
-          <tr>
-            <td colspan="4">
-              <th:block th:replace="~{commons-fragments/fragments :: loadingSpinner('Chargement des utilisateurs...')}"></th:block>
-            </td>
-          </tr>
-        </tbody>
-        <!-- endTag :: userTableBody -->
-      </table>
-
-      <!-- tag :: userTablePagination -->
-      <div id="userTablePagination" class="mt-4 flex justify-end items-center gap-2"></div>
-      <!-- endTag :: userTablePagination -->
+        <div class="px-6 py-4 flex items-center justify-between border-t border-granite-200">
+          <div class="text-granite-700 text-sm flex items-center gap-2">
+            <span>Nombre total d'utilisateurs :</span> 
+            <button type="button" class="flex items-center gap-1 px-2 py-1 hover:rounded hover:bg-granite-100 transition hover:cursor-pointer">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M3.98 8.223A10.477 10.477 0 0 0 1.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.451 10.451 0 0 1 12 4.5c4.756 0 8.773 3.162 10.065 7.498a10.522 10.522 0 0 1-4.293 5.774M6.228 6.228 3 3m3.228 3.228 3.65 3.65m7.894 7.894L21 21m-3.228-3.228-3.65-3.65m0 0a3 3 0 1 0-4.243-4.243m4.242 4.242L9.88 9.88" />
+              </svg>
+            </button>
+            <!-- tag :: totalUserCount -->
+            <span id="totalUserCount"></span>
+            <!-- endTag :: totalUserCount -->
+          </div>
+          <!-- tag :: userTablePagination -->
+          <div id="userTablePagination" class="mt-4 flex justify-end items-center gap-2"></div>
+          <!-- endTag :: userTablePagination -->
+        </div>
+      </div>      
     </div>
   </div>
 
