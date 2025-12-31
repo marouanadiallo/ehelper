@@ -15,8 +15,8 @@ function lastNameValidatorFn(lastName: UserForm["lastName"]): string {
 
 // email validator
 function emailValidatorFn(email: UserForm["email"]): string {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    const err = email && emailRegex.test(email);
+    const EMAIL_REGEXP = /^(?=.{1,254}$)(?=.{1,64}@)[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+)*@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
+    const err = email && EMAIL_REGEXP.test(email);
     return err ? '' : 'Veuillez entrer une adresse email valide.';
 }
 

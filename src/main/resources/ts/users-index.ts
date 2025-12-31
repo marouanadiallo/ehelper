@@ -50,8 +50,8 @@ function headerKeysAreValid(headers: Array<string>): boolean {
 function isValidColonneValue(position: number, value: string): any {
     switch(position) {
         case 0:
-           const genderError = genderValidatorFn(value as 'HOMME' | 'FEMME' | null);
-           return `genre invalide (${genderError ? null : 'seulement HOMME ou FEMME  est accepté'})`;
+           const isGender = genderValidatorFn(value as 'HOMME' | 'FEMME' | null);
+           return isGender ? null : `genre invalide (seulement HOMME ou FEMME est accepté)`;
         case 1:
            const firstNameError = lastNameValidatorFn(value);
            return firstNameError === '' ? null : `prénom invalide (${firstNameError})`;

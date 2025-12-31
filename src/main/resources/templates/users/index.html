@@ -47,10 +47,10 @@
               justify-center bg-black/25 z-50"
             >
               <div class="bg-white p-6 rounded-lg shadow-lg flex flex-col items-center gap-4">
-                <h2 class="text-lg font-semibold text-granite-900 w-full">Aperçu des utilisateurs à importer</h2>
+                <h2 class="mx-6 text-lg font-semibold text-granite-900 w-full">Aperçu des utilisateurs à importer</h2>
                 <template x-if="errors.length > 0">
                   <div class="w-full bg-red-50 border border-red-200 text-red-900 p-2 rounded mb-4">
-                      <ul>
+                      <ul class="list-disc list-inside text-sm">
                         <template x-for="error in errors">
                           <li x-text="error"></li>
                         </template>
@@ -84,7 +84,7 @@
                         </tr>
                       </template>
                       <template x-if="users.length === 0">
-                        <tr>
+                        <tr class="border-b border-granite-200">
                           <td colspan="6" class="px-6 py-4 text-sm text-granite-900 text-center">
                            Fichier invalide ou aucun utilisateur à importer.
                           </td>
@@ -95,15 +95,15 @@
                 </div>
                 <div class="mt-4 flex gap-4">
                   <button @click="resetAll()"
-                    class="px-4 py-2 bg-red-50 border border-red-200 rounded-lg hover:cursor-pointer transition-colors"
+                    class="px-3 py-2 rounded-lg font-medium transition-colors hover:bg-granite-100 border border-granite-500 text-granite-700"
                   >
                     Annuler
                   </button>
                   <button
-                    class="px-4 py-2 bg-granite-700 text-white rounded-lg hover:cursor-pointer flex items-center gap-2
-                      hover:bg-granite-800 transition-colors font-medium text-sm"
+                    class="px-4 py-2 rounded-lg transition-colors font-medium bg-granite-300 text-granite-500 cursor-not-allowed flex items-center gap-2"
+                    :class="{ 'bg-granite-600 text-white hover:bg-granite-700 cursor-pointer': errors.length <= 0 && !loading }"
                     @click="loading = true; $refs.uploadUserBatchForm.requestSubmit();"
-                    :disabled="loading"
+                    :disabled="loading || errors.length > 0"
                   >
                     <svg x-show="!loading" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
                       <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" />

@@ -183,21 +183,20 @@
 
                     <!-- Boutons -->
                     <div class="flex items-center gap-3 pt-4">
-                        <button 
-                            type="submit"
-                            :disabled="isInvalid"
-                            :class="{ 'opacity-60 cursor-not-allowed': isInvalid }"
-                            class="px-4 py-2 bg-granite-700 text-white rounded-lg
-                            hover:bg-granite-800 transition-colors font-medium text-sm"
-                        >
-                            Créer l'utilisateur
-                        </button>
-                        <a 
+                         <a 
                             th:href="@{/users}"
-                            class="px-4 py-2 border border-granite-300 text-granite-700 rounded-lg hover:bg-granite-50 transition-colors font-medium text-sm"
+                            class="px-3 py-2 rounded-lg font-medium transition-colors hover:bg-granite-100 border border-granite-500 text-granite-700"
                         >
                             Annuler
                         </a>
+                        <button 
+                            type="submit"
+                            :disabled="isInvalid"
+                            class="px-4 py-2 rounded-lg transition-colors font-medium bg-granite-300 text-granite-500 cursor-not-allowed"
+                            :class="{ 'bg-granite-600 text-white hover:bg-granite-700 cursor-pointer': !isInvalid }"
+                        >
+                            Créer l'utilisateur
+                        </button>
                     </div>
                 </form>
             </div>
