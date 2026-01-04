@@ -1,8 +1,9 @@
 package com.dialltay.ehelper.application.port.in;
 
-import java.util.List;
+import org.springframework.web.multipart.MultipartFile;
+
 
 public interface CreateUserUseCase {
     Long createUser(CreateUserCommand command);
-    void createUsersBulk(List<CreateUserCommand> commands);
+    void createUsersBatch(MultipartFile file);
 }

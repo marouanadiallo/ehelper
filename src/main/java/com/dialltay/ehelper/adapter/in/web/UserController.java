@@ -6,6 +6,7 @@ import com.dialltay.ehelper.application.port.in.CreateUserCommand;
 import com.dialltay.ehelper.application.port.in.CreateUserUseCase;
 import com.dialltay.ehelper.application.port.in.GetUserSliceUseCase;
 
+import io.github.wimdeblauwe.htmx.spring.boot.mvc.HtmxResponse;
 import io.github.wimdeblauwe.htmx.spring.boot.mvc.HxRequest;
 
 import jakarta.validation.Valid;
@@ -66,14 +67,19 @@ public class UserController {
         return "users/details";
     }
 
-    @PostMapping("/upload/batch")
+    @GetMapping("/batch/preview")
     @HxRequest
-    public String createUserBatch(@RequestParam("file") MultipartFile file, Model model) {
-        if (file.isEmpty()) {
-            model.addAttribute("error", WebUtils.getMessage("file.upload.empty"));
-            return "users/index";
-        }
-        return "users/index";
+    public String previewUsersBatch() {
+        return "users/fragments :: previewUploadBatchForm";
+    }
+
+    @PostMapping("/batch/upload")
+    @HxRequest
+    public String createUserBatch(@RequestParam("file") MultipartFile file, Model model, HtmxResponse htmxResponse) {
+        this.createUserUseCase.createUsersBatch(file);
+        htmxResponse.addTrigger("reload-users");
+        model.addAttribute("message", "Les utilisateurs ont été créés avec succès.");
+        return "commons/fragments :: successMessage";
     }
 
     @GetMapping("/form/create")

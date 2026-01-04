@@ -13,4 +13,14 @@
     --color-granite-900: oklch(22.89% 0.016 196.11);
     --color-granite-950: oklch(19.17% 0.012 186.72);
 }
-        
+
+@layer base {
+  button:not(:disabled),
+  [role="button"]:not(:disabled) {
+    cursor: pointer;
+  }
+
+  input {
+    outline: none;
+  }
+}
