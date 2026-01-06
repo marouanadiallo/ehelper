@@ -1,27 +1,38 @@
 package com.dialltay.ehelper.application.domain.service;
 
 import com.dialltay.ehelper.application.domain.model.Gender;
+import com.dialltay.ehelper.application.port.out.LoadUserPort;
+import com.dialltay.ehelper.application.port.out.CreateUserPort;
 import com.dialltay.ehelper.application.port.in.CreateUserCommand;
 import com.dialltay.ehelper.application.port.in.CreateUserUseCase;
-import com.dialltay.ehelper.application.port.out.CreateUserPort;
-import com.dialltay.ehelper.application.port.out.LoadUserPort;
+
 import jakarta.validation.Validator;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVRecord;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.apache.commons.io.FilenameUtils;
+import org.springframework.stereotype.Service;
+import org.apache.commons.text.StringEscapeUtils;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.io.Reader;
+import java.nio.charset.StandardCharsets;
+import java.util.List;
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.Reader;
-import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
 
 @Service
 public class CreateUserService implements CreateUserUseCase {
+
+    private static final int MAX_LINES = 15;
+    private static final long MAX_FILE_SIZE = 50 * 1024; // 50KB
+    private static final Logger logger = LoggerFactory.getLogger(CreateUserService.class);
 
     private final CreateUserPort createUserPort;
     private final LoadUserPort userQueries;
@@ -47,56 +58,71 @@ public class CreateUserService implements CreateUserUseCase {
 
     @Override
     @Transactional
-    public void createUsersBatch(MultipartFile file) {
+    public void createUsersBatch(MultipartFile file)  {
+
         if (file.isEmpty()) {
-            //TODO: log and throw exception
-            return;
+            throw new IllegalArgumentException("Fichier vide");
         }
 
-        String fileExtension = getFileExtension(file.getOriginalFilename());
-        if (!fileExtension.equalsIgnoreCase("csv")) {
-            //TODO: log and throw exception
-            return;
+        // Extension
+        String fileName = FilenameUtils.normalize(file.getOriginalFilename());
+        if (!"csv".equalsIgnoreCase(FilenameUtils.getExtension(fileName))) {
+           throw new IllegalArgumentException("Extension de fichier invalide");
         }
 
-        try (Reader readerIn = new InputStreamReader(file.getInputStream())) {
+        // Content type
+        if (!"text/csv".equals(file.getContentType())) {
+            throw new IllegalArgumentException("Type de fichier invalide");
+        }
+
+        // Taille
+        if (file.getSize() > MAX_FILE_SIZE) {
+            throw new IllegalArgumentException("Fichier trop volumineux");
+        }
+
+        try (Reader readerIn = new InputStreamReader(file.getInputStream(), StandardCharsets.UTF_8)) {
+
             Iterable<CSVRecord> records = CSVFormat.DEFAULT.builder()
                     .setHeader(Headers.class)
                     .setSkipHeaderRecord(true)
                     .get()
                     .parse(readerIn);
 
+            int lineCount = 0;
             List<CreateUserCommand> commands = new ArrayList<>();
             for (CSVRecord record : records) {
-                var gender = Gender.valueOf(record.get(Headers.GENDER));
+
+                if (++lineCount > MAX_LINES) {
+                    throw new IllegalArgumentException(
+                            "Maximum " + MAX_LINES + " lignes autorisées");
+                }
+
+                var gender = Gender.valueOf(record.get(Headers.GENDER).trim().toUpperCase());
                 var birthDate = LocalDate.parse(record.get(Headers.BIRTH_DATE), DateTimeFormatter.ofPattern("yyyy-MM-dd"));
                 CreateUserCommand newUser = new CreateUserCommand(
                         gender,
-                        record.get(Headers.FIRST_NAME),
-                        record.get(Headers.LAST_NAME),
+                        StringEscapeUtils.escapeHtml4(record.get(Headers.FIRST_NAME).trim()),
+                        StringEscapeUtils.escapeHtml4(record.get(Headers.LAST_NAME).trim()),
                         birthDate,
-                        record.get(Headers.EMAIL),
-                        record.get(Headers.TELEPHONE)
+                        StringEscapeUtils.escapeHtml4(record.get(Headers.EMAIL).trim()),
+                        StringEscapeUtils.escapeHtml4(record.get(Headers.TELEPHONE).trim())
                 );
+
                 var cv = this.validator.validate(newUser);
                 if (!cv.isEmpty()) {
-                    // throw validation exception
-                    return;
+                    throw new IllegalArgumentException("Données invalides à la ligne " + lineCount);
                 }
+
                 commands.add( newUser );
             }
+
             this.createUserPort.saveAll(commands);
-        } catch (IOException e) {
+            logger.info("{} utilisateurs créés avec succès à partir du fichier {}", commands.size(), fileName);
+
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
 
-    }
-
-    private String getFileExtension(String filename) {
-        if (filename == null || !filename.contains(".")) {
-            return "";
-        }
-        return filename.substring(filename.lastIndexOf(".") + 1);
     }
 
     enum Headers {

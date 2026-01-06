@@ -1,34 +1,26 @@
 package com.dialltay.ehelper;
 
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.boot.autoconfigure.web.servlet.error.BasicErrorController;
-//import org.springframework.boot.webmvc.autoconfigure.error.BasicErrorController;
+import io.github.wimdeblauwe.htmx.spring.boot.mvc.HtmxResponse;
+import io.github.wimdeblauwe.htmx.spring.boot.mvc.HtmxReswap;
 import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.View;
+import org.springframework.web.servlet.view.FragmentsRendering;
+
+import java.util.Map;
 
 
-/**
- * Extends default Spring Boot error handling with a custom error method for htmx requests.
- * Always returns http status 200 so the HTML is swapped properly in the client.
- * @see BasicErrorController
- */
-@Controller
+@ControllerAdvice
 public class HtmxErrorController {
 
-    private final BasicErrorController basicErrorController;
-
-    public HtmxErrorController(final BasicErrorController basicErrorController) {
-        this.basicErrorController = basicErrorController;
+    @ExceptionHandler(Exception.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public View handleError(Exception ex, HtmxResponse response ) {
+        response.setReswap(HtmxReswap.none());
+        return FragmentsRendering
+                .fragment("commons/fragments :: errorMessage", Map.of("message", ex.getMessage()))
+                .build();
     }
-
-    @RequestMapping(value = "${server.error.path:${error.path:/error}}", headers = "HX-Request=true")
-    @ResponseStatus(HttpStatus.OK)
-    public ModelAndView errorHtmx(final HttpServletRequest request, final HttpServletResponse response) {
-        return basicErrorController.errorHtml(request, response);
-    }
-
 }

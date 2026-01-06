@@ -74,12 +74,13 @@ export default () => ({
     handleAfterUploadRequest(event: any) {
         this.loading = false;
         const detail = event.detail;
+
         if(detail.xhr.status === 200) {
+            this.importSuccess = true;
             this.file = null;
             this.fileInput!.value = ''
             this.users = [];
             this.errors = [];
-            this.importSuccess = true;
 
             let timeLeft = 3;
             const progressFill: HTMLElement | null = document.getElementById('progressFill');
@@ -99,6 +100,11 @@ export default () => ({
                 }
 
             }, 100);
+            return;
+        }
+
+        if(detail.xhr.status >= 400) {
+           this.resetAll();
         }
     },
 
@@ -109,6 +115,7 @@ export default () => ({
         this.file = null;
         this.fileInput!.value = '';
         this.showPreviewModal = false;
+        this.importSuccess = false;
         this.users = [];
         this.errors = [];
     },

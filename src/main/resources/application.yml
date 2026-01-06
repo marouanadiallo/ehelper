@@ -1,4 +1,9 @@
 spring:
+  web:
+    error:
+      include-stacktrace: never # Do not include stack traces in error responses for security reasons
+      whitelabel:
+        enabled: false # Disable the default whitelabel error page
   servlet:
     multipart:
       max-file-size: 10MB # Set maximum file upload size
