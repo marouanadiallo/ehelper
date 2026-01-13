@@ -1,4 +1,12 @@
+server:
+  shutdown: graceful # Enable graceful shutdown of the server
+logging:
+  level:
+    org.hibernate: ERROR # Set Hibernate logging level to ERROR for production
+    com.zaxxer.hikari: WARN # Set HikariCP logging level to WARN to reduce log noise
 spring:
+  lifecycle:
+    timeout-per-shutdown-phase: 1m # Increase shutdown timeout to 1 minute for graceful shutdowns
   web:
     error:
       include-stacktrace: never # Do not include stack traces in error responses for security reasons
@@ -48,13 +56,6 @@ spring:
         jdbc:
           batch_size: 50 # Set JDBC batch size for batch operations
           time_zone: UTC # Ensure consistent timezone handling
-
-
-  logging:
-    level:
-      org.hibernate: ERROR # Set Hibernate logging level to ERROR for production
-      com.zaxxer.hikari: WARN # Set HikariCP logging level to WARN to reduce log noise
-
   mail:
     properties:
       mail:

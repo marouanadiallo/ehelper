@@ -2,6 +2,7 @@ package com.dialltay.ehelper.application.port.in;
 
 import com.dialltay.ehelper.application.validation.BirthDatePermit;
 import com.dialltay.ehelper.application.domain.model.Gender;
+import com.dialltay.ehelper.commons.annotations.ValidateYourSelf;
 import jakarta.validation.constraints.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -32,7 +33,7 @@ public record CreateUserCommand(
 
         @Pattern(regexp = "^\\+?[0-9 .-]{7,15}$", message = "{com.ehelper.user.telephone.pattern}")
         String telephone
-) {
+) implements ValidateYourSelf<CreateUserCommand> {
     public static CreateUserCommand defaultCommand() {
         return new CreateUserCommand(null,
                 null,

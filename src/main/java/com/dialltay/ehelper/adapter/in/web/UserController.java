@@ -9,8 +9,6 @@ import com.dialltay.ehelper.application.port.in.GetUserSliceUseCase;
 import io.github.wimdeblauwe.htmx.spring.boot.mvc.HtmxResponse;
 import io.github.wimdeblauwe.htmx.spring.boot.mvc.HxRequest;
 
-import jakarta.validation.Valid;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -89,7 +87,7 @@ public class UserController {
     }
 
     @PostMapping("/create")
-    public String createUser(@ModelAttribute("userForm") @Valid CreateUserCommand command,
+    public String createUser(@ModelAttribute("userForm") CreateUserCommand command,
                              BindingResult bindingResult,
                              Model model) {
 

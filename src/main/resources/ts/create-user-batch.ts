@@ -181,11 +181,11 @@ export default () => ({
             let lineHasError = false;
 
             headers.forEach((header, i) => {
-                const errorMessage = isValidColonneValue(i, values[i]);
-                if (errorMessage) {
-                    this.errors.push(`Ligne ${index + 2} : ${errorMessage}`);
-                    lineHasError = true;
-                }
+                // const errorMessage = isValidColonneValue(i, values[i]);
+                // if (errorMessage) {
+                //     this.errors.push(`Ligne ${index + 2} : ${errorMessage}`);
+                //     lineHasError = true;
+                // }
                 user[header] = values[i];
             });
             

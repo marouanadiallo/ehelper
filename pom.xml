@@ -8,6 +8,7 @@
         <version>3.5.9</version>
         <relativePath /><!-- lookup parent from repository -->
     </parent>
+
     <groupId>com.dialltay</groupId>
     <artifactId>ehelper</artifactId>
     <version>0.0.1-SNAPSHOT</version>
@@ -153,6 +154,10 @@
                         <path>
                             <groupId>org.projectlombok</groupId>
                             <artifactId>lombok</artifactId>
+                        </path>
+                        <path>
+                            <groupId>org.springframework.boot</groupId>
+                            <artifactId>spring-boot-configuration-processor</artifactId>
                         </path>
                     </annotationProcessorPaths>
                     <compilerArgs>

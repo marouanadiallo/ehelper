@@ -1,3 +1,8 @@
+logging:
+  console:
+    enabled: false # Disable console logging in production
+  file:
+    name: logs/ehelper-app.log # Log file location
 spring:
   cloud:
     azure:

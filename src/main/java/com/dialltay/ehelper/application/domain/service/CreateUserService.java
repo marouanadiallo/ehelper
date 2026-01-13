@@ -6,7 +6,6 @@ import com.dialltay.ehelper.application.port.out.CreateUserPort;
 import com.dialltay.ehelper.application.port.in.CreateUserCommand;
 import com.dialltay.ehelper.application.port.in.CreateUserUseCase;
 
-import jakarta.validation.Validator;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVRecord;
 
@@ -23,7 +22,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.time.format.DateTimeFormatter;
 
@@ -36,24 +34,23 @@ public class CreateUserService implements CreateUserUseCase {
 
     private final CreateUserPort createUserPort;
     private final LoadUserPort userQueries;
-    private final Validator validator;
 
-    public CreateUserService(CreateUserPort createUserPort, LoadUserPort userQueries, Validator validator) {
+    public CreateUserService(CreateUserPort createUserPort, LoadUserPort userQueries) {
         this.createUserPort = createUserPort;
         this.userQueries = userQueries;
-        this.validator = validator;
     }
 
     @Override
     @Transactional
-    public Long createUser(CreateUserCommand command) {
-        var exists = userQueries.existsByEmailOrTelephone(command.email(), command.telephone());
+    public Long createUser(CreateUserCommand userCommand) {
+        userCommand.validateSelf();
+        var exists = userQueries.existsByEmailOrTelephone(userCommand.email(), userCommand.telephone());
         if (exists) {
             throw new UserDuplicationException("Duplication d'utilisateur, email ou téléphone existe déjà.");
         }
 
         // notify your about his/her account creation
-        return this.createUserPort.save(command);
+        return this.createUserPort.save(userCommand);
     }
 
     @Override
@@ -108,11 +105,7 @@ public class CreateUserService implements CreateUserUseCase {
                         StringEscapeUtils.escapeHtml4(record.get(Headers.TELEPHONE).trim())
                 );
 
-                var cv = this.validator.validate(newUser);
-                if (!cv.isEmpty()) {
-                    throw new IllegalArgumentException("Données invalides à la ligne " + lineCount);
-                }
-
+                newUser.validateSelf();
                 commands.add( newUser );
             }
 

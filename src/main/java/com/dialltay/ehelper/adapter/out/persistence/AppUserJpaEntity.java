@@ -18,7 +18,7 @@ import java.util.UUID;
         @UniqueConstraint(name = "uq_user_email", columnNames = "email"),
         @UniqueConstraint(name = "uq_user_telephone", columnNames = "telephone")
 })
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@AllArgsConstructor(access = AccessLevel.PROTECTED)
 @EntityListeners(AuditingEntityListener.class)
 public class AppUserJpaEntity extends BaseJpaEntity<Long> {
 
@@ -68,6 +68,17 @@ public class AppUserJpaEntity extends BaseJpaEntity<Long> {
 
     @Embedded
     private final AuditMetadata auditMetadata = AuditMetadata.defaultMetadata();
+
+    protected AppUserJpaEntity(){
+        this.id = null;
+        this.businessId = null;
+        this.gender = null;
+        this.firstName = null;
+        this.lastName = null;
+        this.email = null;
+        this.telephone = null;
+        this.birthDate = null;
+    }
 
     public AppUserJpaEntity withId(Long id ) {
         return new AppUserJpaEntity(id,
